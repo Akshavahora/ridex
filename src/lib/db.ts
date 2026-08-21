@@ -14,16 +14,21 @@ if(!cached) {
     }
 }
 
-if(!cached.promise) {
-    cached.promise = mongoose.connect(mongodbUrl).then((mongoose) => {
-        return mongoose.connection
-    })
-}    
-
 const connectDb = async () => {
     if(cached.conn) {
         return cached.conn
     }
+
+    if(cached.promise) {
+        // console.log("Promise conn");
+    }
+
+    if(!cached.promise) {
+        // console.log("new connection");
+        cached.promise = mongoose.connect(mongodbUrl).then((mongoose) => {
+            return mongoose.connection
+        })
+    }    
 
     try {
         const conn = await cached.promise
