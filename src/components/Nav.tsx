@@ -1,15 +1,19 @@
 'use client'
-import React from 'react'
+import React, { useState } from 'react'
 import { motion } from 'motion/react'
 import Image from 'next/image'
 import Link from 'next/link'
 const Nav_Items = ["Home","Booking","About Us","Contact"]
 import { withRouter } from 'next/router'
 import { usePathname } from 'next/navigation'
+import AuthModel from './AuthModel'
 
 function Nav() {
     const pathName=usePathname()
+    const [authOpen,setAuthOpen]=useState(false)
   return (
+
+    <>
     <motion.div
         initial={{y: -60, opacity:0}}
         animate={{y: 0, opacity:1}}
@@ -41,15 +45,21 @@ function Nav() {
 
     </div>
 
-    <button className='px-4 py-1.5 rounded-full bg-white text-black text-sm'>
+    <button className='px-4 py-1.5 rounded-full bg-white text-black text-sm'
+    onClick={()=>setAuthOpen(true)}>
         Login
 
     </button>
     </div>
 
 
+
   
     </motion.div>
+    <AuthModel open={authOpen} onClose={()=>setAuthOpen(false)}/>
+
+
+    </>
   )
 }
 
