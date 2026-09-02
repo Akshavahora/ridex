@@ -4,7 +4,7 @@ import {AnimatePresence, motion} from "motion/react"
 import { CircleDashed, Lock, Mail, User, X } from 'lucide-react'
 import Image from 'next/image'
 import axios from 'axios'
-// import {signIn} from 'next-auth/react'
+import {signIn} from 'next-auth/react'
 
 
 
@@ -23,8 +23,8 @@ function AuthModel({open,onClose}:propType) {
   const [loading,setLoding]=useState(false)
   const [err,setErr]=useState("")
 
-  // const {data}=useSession()
-  // console.log(data)
+  const {data}=useSession()
+  console.log(data)
 
   const handleSignUp=async ()=>{
 
@@ -49,11 +49,11 @@ function AuthModel({open,onClose}:propType) {
 
   const handleLogin=async()=>{
     setLoding(true)
-  //  const res = await signIn("credentials",{
-  //     email,password,reiderect:false
-  //   })
+   const res = await signIn("credentials",{
+      email,password,reiderect:false
+    })
     setLoding(false)
-    // console.log(res)
+    console.log(res)
   }
 
 
