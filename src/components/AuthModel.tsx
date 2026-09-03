@@ -4,7 +4,7 @@ import {AnimatePresence, motion} from "motion/react"
 import { CircleDashed, Lock, Mail, User, X } from 'lucide-react'
 import Image from 'next/image'
 import axios from 'axios'
-// import {signIn} from 'next-auth/react'
+import {signIn} from 'next-auth/react'
 
 
 
@@ -20,25 +20,23 @@ function AuthModel({open,onClose}:propType) {
   const [name,setName]=useState("")
   const [email,setEmail]=useState("")
   const [password,setPassword]=useState("")
-  const [loading,setLoding]=useState(false)
+  const [loading,setLoading]=useState(false)
   const [err,setErr]=useState("")
 
-  // const {data}=useSession()
-  // console.log(data)
-
+  
   const handleSignUp=async ()=>{
 
-    setLoding(true)
+    setLoading(true)
     try{
 
       const {data} = await axios.post("/api/auth/register",{
         name,email,password
       })
       console.log(data)
-      setLoding(false)
+      setLoading(false)
 
     }catch(error:any){
-      setLoding(false)
+      setLoading(false)
       setErr(error.response.data.message ?? "something went wrong")
 
     }
@@ -48,12 +46,12 @@ function AuthModel({open,onClose}:propType) {
 
 
   const handleLogin=async()=>{
-    setLoding(true)
-  //  const res = await signIn("credentials",{
-  //     email,password,reiderect:false
-  //   })
-    setLoding(false)
-    // console.log(res)
+    setLoading(true)
+   const res = await signIn("credentials",{
+      email,password,redirect:false
+    })
+    setLoading(false)
+    console.log(res)
   }
 
 
@@ -89,7 +87,7 @@ const handleGoogleLogin=async ()=>{
           <div className='relative w-full max-w-md rounded-3xl bg-white border
           border-black/10 shadow-[0_40px_100px_rgba(0,0,0,0.35)] p-6 sm:p-8 text-black'>
 
-          <div className='absolute right-4 top-4 text-gray-500 hover:texr-black
+          <div className='absolute right-4 top-4 text-gray-500 hover:text-black
           transition' onClick={onClose}>
 
           <X size={20}/>
@@ -107,7 +105,7 @@ const handleGoogleLogin=async ()=>{
           onClick={handleGoogleLogin} '>
 
 
-        <Image src="/google.jpeg" alt='Google' width={20} height={20}/>
+        <Image src="/google.png" alt='Google' width={20} height={20}/>
         Continue With Google
 
           </button>
