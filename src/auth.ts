@@ -92,8 +92,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                 token.email = user.email,
                 token.role = user.role
             }
-            
-
             return token
         },
 
