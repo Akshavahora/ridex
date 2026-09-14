@@ -1,0 +1,13 @@
+'use client'
+import { useSession } from 'next-auth/react'
+import useGetMe from './hooks/useGetMe'
+import React from 'react'
+
+function InitUser() {
+ const {status}=  useSession()
+ useGetMe(status==='authenticated')
+ return null
+   
+}
+
+export default InitUser
