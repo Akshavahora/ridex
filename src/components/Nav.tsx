@@ -1,13 +1,11 @@
 "use client";
-import React, { useState } from "react"
-import { motion } from "motion/react"
-import Image from "next/image"
-import Link from "next/link"
-import { withRouter } from "next/router"
-import { usePathname } from "next/navigation"
-import AuthModel from "./AuthModel"
-
-
+import React, { useState } from "react";
+import { motion } from "motion/react";
+import Image from "next/image";
+import Link from "next/link";
+import { withRouter } from "next/router";
+import { usePathname } from "next/navigation";
+import AuthModel from "./AuthModel";
 
 const Nav_Items = ["Home", "Booking", "About Us", "Contact"];
 
@@ -55,7 +53,12 @@ function Nav() {
             })}
           </div>
 
-      
+          <button
+            className="px-4 py-1.5 rounded-full bg-white text-black text-sm"
+            onClick={() => setAuthOpen(true)}
+          >
+            Login
+          </button>
         </div>
       </motion.div>
       <AuthModel open={authOpen} onClose={() => setAuthOpen(false)} />
