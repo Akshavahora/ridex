@@ -57,7 +57,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             }
         }),
 
-        Google ({
+        Google({
             clientId: process.env.AUTH_GOOGLE_ID,
             clientSecret: process.env.AUTH_GOOGLE_SECRET
         })
@@ -66,19 +66,23 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     // When user login and logout what functions should be called is written here 
     callbacks: {
 
-        async signIn({user, account}) {
-            if(account?.provider == "google") {
+        async signIn({ user, account }) {
+            if (account?.provider == "google") {
                 await connectDb()
-                let dbUser = await User.findOne({email: user.email})
-                if(!dbUser) {
-                    // if not found user then create user
+
+
+                let dbUser = await User.findOne({ email: user.email })
+
+                if (!dbUser) {
+                    // if user is not exist in database then create a new user
+
                     dbUser = await User.create({
                         name: user.name,
                         email: user.email
                     })
                 }
 
-                user.id=dbUser._id.toString();
+                user.id = dbUser._id.toString()
                 user.role = dbUser.role
             }
 
@@ -86,22 +90,22 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         },
 
         async jwt({ token, user }) {  //user is provided by auth.js 
-            if(user) {
+            if (user) {
                 token.name = user.name,
-                token.id = user.id,
-                token.email = user.email,
-                token.role = user.role
+                    token.id = user.id,
+                    token.email = user.email,
+                    token.role = user.role
             }
             return token
         },
 
-        async session ({ token, session }) {
+        async session({ token, session }) {
 
             if (session.user) {
                 session.user.name = token.name,
-                session.user.id = token.id as string,
-                session.user.email = token.email as string,
-                session.user.role = token.role as string
+                    session.user.id = token.id as string,
+                    session.user.email = token.email as string,
+                    session.user.role = token.role as string
             }
 
             return session
@@ -109,14 +113,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     },
 
     pages: {
-        signIn:"/signin",
+        signIn: "/signin",
         error: "/signin",
 
     },
 
     session: {
         strategy: "jwt",
-        maxAge: 10*24*60*60
+        maxAge: 10 * 24 * 60 * 60
     },
     secret: process.env.BETTER_AUTH_SECRET,
 })

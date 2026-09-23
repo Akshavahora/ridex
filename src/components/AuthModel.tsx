@@ -18,6 +18,7 @@ function AuthModel({ open, onClose }: propType) {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState("");
+  const [otp, setOtp] = useState(["", "", "" , "", "", "" ]);
 
   // To check whether session data is coming or not  
   const { data }= useSession();
@@ -31,7 +32,26 @@ function AuthModel({ open, onClose }: propType) {
         email,
         password,
       });
+      setErr("");
+      setStep("otp");
+      setLoading(false);
+    } catch (error: any) {
+      setLoading(false);
+      setErr(error.response.data.message ?? "something went wrong");
+    }
+  };
+
+  const handleVerifyEmail = async () => {
+    setLoading(true);
+    try {
+      const { data } = await axios.post("/api/auth/verify-email", {
+        email,
+        otp: otp.join(""),
+      });
       console.log(data);
+      setOtp(["", "", "", "", "", ""]);
+      setErr("");
+      setStep("login");
       setLoading(false);
     } catch (error: any) {
       setLoading(false);
@@ -54,6 +74,21 @@ function AuthModel({ open, onClose }: propType) {
     await signIn("google");
   };
 
+  const handleChangeOtp = (index: number, value: string ) => {
+    if(!/^[0-9]?$/.test(value)) return;
+
+    const updated = [...otp];
+    updated[index] = value;
+    setOtp(updated); 
+
+    if(value && index < otp.length - 1) {
+      document.getElementById(`otp-${ index + 1}`)?.focus();
+    }
+
+    if(!value && index > 0) {
+      document.getElementById(`otp-${ index - 1}`)?.focus();
+    }
+  }
   return (
     <AnimatePresence>
       {open && (
@@ -238,7 +273,7 @@ function AuthModel({ open, onClose }: propType) {
                           onClick={handleSignUp}
                         >
                           {!loading ? (
-                            "Sign Up"
+                            "Send Otp"
                           ) : (
                             <CircleDashed
                               size={18}
@@ -258,6 +293,45 @@ function AuthModel({ open, onClose }: propType) {
                           Login
                         </div>
                       </p>
+                    </motion.div>
+                  )}
+
+                  {step == "otp" && (
+                    <motion.div
+                      key="otp"
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -20 }}
+                    >
+                      <h2 className="text-xl font-semibold text-center">Verify Email</h2>
+
+                      <div className="mt-6 flex justify-between gap-2">
+                        {otp.map((digit, i) => (
+                          <input 
+                            key={i} 
+                            id={`otp-${i}`}
+                            value={digit}
+                            maxLength={1}
+                            className="w-10 h-12 sm:w-12 text-center text-lg font-semibold rounded-xl bg-white border border-black/20 outline-none"
+                            onChange={(e) => handleChangeOtp(i, e.target.value)}
+                          />
+                        ))}
+                      </div>
+
+                      {err && <p className="text-red-500">*{err}</p>}
+
+                      <button className="mt-6 w-full h-11 rounded-xl bg-black text-white font-semibold hover:bg-gray-900 transition flex justify-center items-center" 
+                      onClick={handleVerifyEmail} >
+                        {!loading ? (
+                            "Verify OTP and Create Account"
+                          ) : (
+                            <CircleDashed
+                              size={18}
+                              color="white"
+                              className="animate-spin"
+                            />
+                          )}
+                      </button>
                     </motion.div>
                   )}
                 </div>
