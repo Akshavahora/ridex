@@ -196,7 +196,7 @@ function Nav() {
           exit={{opacity:0 ,y:-20}}
           transition={{duration:0.2}}
           className="fixed top-[85px] left-1/2 -translate-x-1/2 w-[92%] 
-          bg-[#0B0B0B] rounded-2xl shawdow-2xl z-40 md:hidden overflow-hidden">
+          bg-[#0B0B0B] rounded-2xl shadow-2xl z-40 md:hidden overflow-hidden">
 
 
 
