@@ -197,7 +197,7 @@ function VehicleSlider() {
         initial={{opacity:0}}
         whileInView={{opacity:1}}
         transition={{delay:0.7}}
-        className="flex itens-center gap-6 mt-8 pt-6 border-t border-zinc-100"
+        className="flex items-center gap-6 mt-8 pt-6 border-t border-zinc-100"
         
         >
           {
