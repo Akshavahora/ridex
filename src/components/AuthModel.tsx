@@ -19,8 +19,8 @@ function AuthModel({ open, onClose }: propType) {
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState("");
 
-  // To check whether session data is coming or not  
-  const { data }= useSession();
+  // To check whether session data is coming or not
+  const { data } = useSession();
   console.log(data);
 
   const handleSignUp = async () => {
@@ -96,7 +96,7 @@ function AuthModel({ open, onClose }: propType) {
                   className="w-full h-11 rounded-x1 border
           border-black/20 flex items-center justify-center gap-3
           text-sm font-semibold hover:bg-black hover:text-white transition"
-          onClick={handleGoogleLogin}
+                  onClick={handleGoogleLogin}
                 >
                   <Image
                     src="/google.png"
@@ -170,8 +170,7 @@ function AuthModel({ open, onClose }: propType) {
                         Don't have account?{" "}
                         <div
                           onClick={() => setStep("signup")}
-                          className="text-black
-                    font-medium hover:underline cursor-pointer"
+                          className="text-black font-medium hover:underline cursor-pointer"
                         >
                           Sign Up
                         </div>
