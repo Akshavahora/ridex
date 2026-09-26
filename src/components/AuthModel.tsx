@@ -6,6 +6,7 @@ import Image from "next/image";
 import axios from "axios";
 import { signIn, useSession } from "next-auth/react";
 
+
 type propType = {
   open: boolean;
   onClose: () => void;
@@ -18,7 +19,7 @@ function AuthModel({ open, onClose }: propType) {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState("");
-  const [otp, setOtp] = useState(["", "", "" , "", "", "" ]);
+  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
 
   // To check whether session data is coming or not
   const { data } = useSession();
@@ -74,21 +75,21 @@ function AuthModel({ open, onClose }: propType) {
     await signIn("google");
   };
 
-  const handleChangeOtp = (index: number, value: string ) => {
-    if(!/^[0-9]?$/.test(value)) return;
+  const handleChangeOtp = (index: number, value: string) => {
+    if (!/^[0-9]?$/.test(value)) return;
 
     const updated = [...otp];
     updated[index] = value;
-    setOtp(updated); 
+    setOtp(updated);
 
-    if(value && index < otp.length - 1) {
-      document.getElementById(`otp-${ index + 1}`)?.focus();
+    if (value && index < otp.length - 1) {
+      document.getElementById(`otp-${index + 1}`)?.focus();
     }
 
-    if(!value && index > 0) {
-      document.getElementById(`otp-${ index - 1}`)?.focus();
+    if (!value && index > 0) {
+      document.getElementById(`otp-${index - 1}`)?.focus();
     }
-  }
+  };
   return (
     <AnimatePresence>
       {open && (
@@ -302,12 +303,14 @@ function AuthModel({ open, onClose }: propType) {
                       animate={{ opacity: 1, x: 0 }}
                       exit={{ opacity: 0, x: -20 }}
                     >
-                      <h2 className="text-xl font-semibold text-center">Verify Email</h2>
+                      <h2 className="text-xl font-semibold text-center">
+                        Verify Email
+                      </h2>
 
                       <div className="mt-6 flex justify-between gap-2">
                         {otp.map((digit, i) => (
-                          <input 
-                            key={i} 
+                          <input
+                            key={i}
                             id={`otp-${i}`}
                             value={digit}
                             maxLength={1}
@@ -319,17 +322,19 @@ function AuthModel({ open, onClose }: propType) {
 
                       {err && <p className="text-red-500">*{err}</p>}
 
-                      <button className="mt-6 w-full h-11 rounded-xl bg-black text-white font-semibold hover:bg-gray-900 transition flex justify-center items-center" 
-                      onClick={handleVerifyEmail} >
+                      <button
+                        className="mt-6 w-full h-11 rounded-xl bg-black text-white font-semibold hover:bg-gray-900 transition flex justify-center items-center"
+                        onClick={handleVerifyEmail}
+                      >
                         {!loading ? (
-                            "Verify OTP and Create Account"
-                          ) : (
-                            <CircleDashed
-                              size={18}
-                              color="white"
-                              className="animate-spin"
-                            />
-                          )}
+                          "Verify OTP and Create Account"
+                        ) : (
+                          <CircleDashed
+                            size={18}
+                            color="white"
+                            className="animate-spin"
+                          />
+                        )}
                       </button>
                     </motion.div>
                   )}
