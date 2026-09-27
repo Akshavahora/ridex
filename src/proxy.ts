@@ -7,54 +7,72 @@ const PUBLIC_ROUTES = ["/"]
 // Public authentication APIs
 const PUBLIC_APIS = ["/api/auth"]
 
+// Authentication and role-based route protection
 export async function proxy(req: NextRequest) {
     const { pathname } = req.nextUrl
 
-    // Allow Next.js static files and favicon
+    // Allow public and static resources
     if (
         pathname.startsWith("/_next") ||
-        pathname === "/favicon.ico" ||
-        pathname.includes(".")
+        pathname.startsWith("/favicon.ico") ||
+        pathname.startsWith(".")
     ) {
         return NextResponse.next()
     }
 
-    // Allow public pages
-    if (PUBLIC_ROUTES.includes(pathname)) {
-        return NextResponse.next()
-    }
+    // Allow public routes
+    // if (PUBLIC_ROUTES.includes(pathname)) {
+    //     return NextResponse.next()
+    // }
+
+    if (PUBLIC_APIS.some((api) => pathname.startsWith(api))) {
+    return NextResponse.next()
+}
 
     // Allow public authentication APIs
-    if (
-        PUBLIC_APIS.some((api) => pathname.startsWith(api))
-    ) {
+    if (PUBLIC_APIS.includes(pathname)) {
         return NextResponse.next()
     }
 
-    // Check authentication
+    // Check user authentication
     const session = await auth()
 
-    // If user is not logged in, redirect to home page
+    // Redirect unauthenticated users
     if (!session) {
         return NextResponse.redirect(new URL("/", req.url))
     }
 
-    // Admin route protection
-    if (
-        pathname.startsWith("/admin") &&
-        session.user?.role !== "admin"
-    ) {
-        return NextResponse.redirect(new URL("/", req.url))
+    // Get user role
+    const role = session.user?.role
+
+    // Protect admin routes
+    if (pathname.startsWith("/admin")) {
+        if (role != "admin") {
+            return NextResponse.redirect(new URL("/", req.url))
+        }
     }
 
-    // Partner route protection
-    if (
-        pathname.startsWith("/partner") &&
-        session.user?.role !== "partner"
-    ) {
-        return NextResponse.redirect(new URL("/", req.url))
+    // Protect partner routes
+    if (pathname.startsWith("/partner")) {
+        if (role != "partner") {
+            return NextResponse.redirect(new URL("/", req.url))
+        }
     }
 
-    // Allow authenticated user
+    // Protect API routes
+    if (pathname.startsWith("/api")) {
+        if (!session.user) {
+            return Response.json(
+                { message: "unauthorize" },
+                { status: 401 }
+            )
+        }
+    }
+
     return NextResponse.next()
+}
+
+// Proxy route configuration
+export const config = {
+    matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"]
 }
