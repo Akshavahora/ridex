@@ -5,7 +5,7 @@ import { auth } from "./auth"
 const PUBLIC_ROUTES = ["/"]
 
 // Public authentication APIs
-const PUBLIC_APIS = ["api/auth"]
+const PUBLIC_APIS = ["/api/auth"]
 
 // Authentication and role-based route protection
 export async function proxy(req: NextRequest) {
@@ -21,9 +21,13 @@ export async function proxy(req: NextRequest) {
     }
 
     // Allow public routes
-    if (PUBLIC_ROUTES.includes(pathname)) {
-        return NextResponse.next()
-    }
+    // if (PUBLIC_ROUTES.includes(pathname)) {
+    //     return NextResponse.next()
+    // }
+
+    if (PUBLIC_APIS.some((api) => pathname.startsWith(api))) {
+    return NextResponse.next()
+}
 
     // Allow public authentication APIs
     if (PUBLIC_APIS.includes(pathname)) {
