@@ -204,7 +204,7 @@ function VehicleSlider() {
             [
               {num: "6+",label:"Categories"},
               {num: "10+",label:"Vehicle types"},
-              {num: "24/7",label:"Availabilty"},
+              {num: "24/7",label:"Availability"},
             ].map((d,i)=>(
               <div key={i} className="flex items-center gap-3">
                 <p className="text-zinc-900 text-lg font-black tracking-tight">{d.num}</p>
