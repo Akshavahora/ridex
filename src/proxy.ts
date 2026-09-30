@@ -21,9 +21,9 @@ export async function proxy(req: NextRequest) {
     }
 
     // Allow public routes
-    // if (PUBLIC_ROUTES.includes(pathname)) {
-    //     return NextResponse.next()
-    // }
+    if (PUBLIC_ROUTES.includes(pathname)) {
+        return NextResponse.next()
+    }
 
     if (PUBLIC_APIS.some((api) => pathname.startsWith(api))) {
     return NextResponse.next()
@@ -77,5 +77,7 @@ export async function proxy(req: NextRequest) {
 
 // Proxy route configuration
 export const config = {
-    matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"]
+  matcher: [
+    "/((?!_next/static|_next/image|favicon.ico|.\\.(?:svg|png|jpg|jpeg|gif|webp)$).)",
+  ],
 }
