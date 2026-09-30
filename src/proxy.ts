@@ -54,6 +54,9 @@ export async function proxy(req: NextRequest) {
 
     // Protect partner routes
     if (pathname.startsWith("/partner")) {
+        if (pathname.startsWith("/partner/onboarding")) {
+            return NextResponse.next();
+        }
         if (role != "partner") {
             return NextResponse.redirect(new URL("/", req.url))
         }
