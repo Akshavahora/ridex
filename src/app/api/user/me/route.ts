@@ -25,7 +25,7 @@ export async function GET(req: Request) {
 
     }catch(err){
         return Response.json(
-            {message:"Get me error ${error}"},
+            {message: `Get me error ${err}`},
             {status:500}
         )
     }
