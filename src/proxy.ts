@@ -5,7 +5,7 @@ import { auth } from "./auth"
 const PUBLIC_ROUTES = ["/"]
 
 // Public authentication APIs
-const PUBLIC_APIS = ["/api/auth"]
+// const PUBLIC_APIS = ["/api/auth"]
 
 // Authentication and role-based route protection
 export async function proxy(req: NextRequest) {
@@ -15,7 +15,7 @@ export async function proxy(req: NextRequest) {
     if (
         pathname.startsWith("/_next") ||
         pathname.startsWith("/favicon.ico") ||
-        pathname.startsWith(".")
+        /\.(png|jpg|jpeg|gif|svg|webp|ico)$/i.test(pathname)
     ) {
         return NextResponse.next()
     }
@@ -25,14 +25,10 @@ export async function proxy(req: NextRequest) {
         return NextResponse.next()
     }
 
-    if (PUBLIC_APIS.some((api) => pathname.startsWith(api))) {
+    // Allow public authentication APIs
+    if (pathname.startsWith("/api/auth")) {
     return NextResponse.next()
 }
-
-    // Allow public authentication APIs
-    if (PUBLIC_APIS.includes(pathname)) {
-        return NextResponse.next()
-    }
 
     // Check user authentication
     const session = await auth()
@@ -77,7 +73,5 @@ export async function proxy(req: NextRequest) {
 
 // Proxy route configuration
 export const config = {
-  matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|.\\.(?:svg|png|jpg|jpeg|gif|webp)$).)",
-  ],
+  matcher: ["/((?!_next/static|_next/image|favicon.ico|.*))"]
 }
