@@ -39,6 +39,6 @@ const partnerDocsSchema = new mongoose.Schema<IPartnerDocs>(
         },
     }, {timestamps:true})
 
-    const  partnerDocs = mongoose.models.partnerDocs || mongoose.model("partnerDocs", partnerDocsSchema)
+    const  partnerDocs = mongoose.models.Vehicle || mongoose.model("partnerDocs", partnerDocsSchema)
 
     export default partnerDocs
