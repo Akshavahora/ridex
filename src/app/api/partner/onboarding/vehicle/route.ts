@@ -90,7 +90,51 @@ export async function POST(req: Request) {
     } catch (error) {
         return Response.json(
             {
-                message: "Internal Server Error",
+                message: "POST vehicle error",
+                error: error,
+            },
+            { status: 500 },
+        );
+    }
+}
+
+
+export async function GET(req: Request) {
+    try {
+        await connectDb();
+
+        const session = await auth();
+        if (!session || !session.user?.email) {
+            return Response.json(
+                {
+                    message: "unauthorized",
+                },
+                { status: 400 },
+            );
+        }
+
+        const user = await User.findOne({ email: session.user.email });
+        if (!user) {
+            return Response.json(
+                {
+                    message: "User not found",
+                },
+                { status: 400 },
+            );
+        }
+
+        let vehicle = await Vehicle.findOne({ owner: user._id });
+
+        if(vehicle) {
+            return Response.json(vehicle, { status: 200 });
+        } else {
+            return null;
+        }
+
+    } catch (error) {
+        return Response.json(
+            {
+                message: "GET vehicle error",
                 error: error,
             },
             { status: 500 },
