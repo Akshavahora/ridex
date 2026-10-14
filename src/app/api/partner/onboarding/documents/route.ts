@@ -1,7 +1,7 @@
 import { auth } from "@/auth";
 import uploadOnCloudinary from "@/lib/cloudinary";
 import connectDb from "@/lib/db";
-import partnerDocs from "@/models/partnerDocs.model";
+import PartnerDocs from "@/models/partnerDocs.model";
 
 import User from "@/models/user.model";
 import { NextRequest } from "next/server";
@@ -88,7 +88,7 @@ export async function POST(req: NextRequest) {
       uploadPayload.rcUrl = url;
     }
 
-    const partnerDoc = await partnerDocs.findOneAndUpdate(
+    const partnerDocs = await PartnerDocs.findOneAndUpdate(
       { owner: user._id },
       { $set: uploadPayload },
       { upsert: true, new: true }
@@ -101,7 +101,7 @@ export async function POST(req: NextRequest) {
     await user.save();
 
     return Response.json(
-      partnerDoc,
+      partnerDocs,
       { status: 201 },
     );
   } catch (error) {

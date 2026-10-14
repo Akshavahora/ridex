@@ -44,6 +44,6 @@ const partnerBankSchema = new mongoose.Schema<IPartnerBank>(
         },
     }, {timestamps:true})
 
-    const  partnerBank = mongoose.models.Vehicle  || mongoose.model("partnerBank", partnerBankSchema)
+    const PartnerBank = mongoose.models.Vehicle  || mongoose.model("PartnerBank", partnerBankSchema)
 
-    export default partnerBank              
+    export default PartnerBank              
