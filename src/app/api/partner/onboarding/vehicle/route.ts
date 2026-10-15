@@ -2,6 +2,7 @@ import { auth } from "@/auth";
 import connectDb from "@/lib/db";
 import User from "@/models/user.model";
 import Vehicle from "@/models/vehicle.model";
+import axios from "axios";
 
 const VEHICLE_REGEX = /^[A-Z]{2}[0-9]{1,2}[A-Z]{0,2}[0-9]{4}$/;
 
@@ -61,7 +62,7 @@ export async function POST(req: Request) {
         }
 
 
-        let vehicle = await Vehicle.findOne({ owner: session.user.id });
+        let vehicle = await Vehicle.findOne({ owner: user._id });
         if (vehicle) {
             vehicle.type = type;
             vehicle.number = vehicleNumber;
@@ -71,7 +72,8 @@ export async function POST(req: Request) {
 
             return Response.json(vehicle, { status: 200 });
         }
-        vehicle = await vehicle.create({
+        vehicle = await Vehicle.create({
+            owner: user._id,
             type,
             number: vehicleNumber,
             vehicleModel,
@@ -88,6 +90,7 @@ export async function POST(req: Request) {
 
         return Response.json(vehicle, { status: 200 });
     } catch (error) {
+        console.log(error);
         return Response.json(
             {
                 message: "POST vehicle error",
@@ -140,4 +143,5 @@ export async function GET(req: Request) {
             { status: 500 },
         );
     }
+
 }
