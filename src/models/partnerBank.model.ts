@@ -16,7 +16,7 @@ interface IPartnerBank{
 const partnerBankSchema = new mongoose.Schema<IPartnerBank>(
     {
         owner: {
-            owner: mongoose.Types.ObjectId,
+            owner: mongoose.Schema.Types.ObjectId,
             ref: "User",
             required: true,
         },

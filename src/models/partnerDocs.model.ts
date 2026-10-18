@@ -1,12 +1,12 @@
 import mongoose from "mongoose";
 
 // Create Partner Document interface 
-interface IPartnerDocs{
+interface IPartnerDocs {
     owner: mongoose.Types.ObjectId,
     adharUrl: string,
     rcUrl: string,
-    licenseUrl: string,  
-    status: "approved" | "pending" |"rejected",
+    licenseUrl: string,
+    status: "approved" | "pending" | "rejected",
     rejectionReason?: string,
     createdAt: Date,
     updatedAt: Date
@@ -16,7 +16,7 @@ interface IPartnerDocs{
 const partnerDocsSchema = new mongoose.Schema<IPartnerDocs>(
     {
         owner: {
-            owner: mongoose.Types.ObjectId,
+            type: mongoose.Schema.Types.ObjectId,
             ref: "User",
             required: true,
         },
@@ -29,16 +29,16 @@ const partnerDocsSchema = new mongoose.Schema<IPartnerDocs>(
         licenseUrl: {
             type: String,
         },
-        status:{
+        status: {
             type: String,
             enum: ["approved", "pending", "rejected"],
             default: "pending",
         },
-        rejectionReason:{
+        rejectionReason: {
             type: String,
         },
-    }, {timestamps:true})
+    }, { timestamps: true })
 
-    const  PartnerDocs = mongoose.models.Vehicle || mongoose.model("PartnerDocs", partnerDocsSchema)
+const PartnerDocs = mongoose.models.Vehicle || mongoose.model("PartnerDocs", partnerDocsSchema)
 
-    export default PartnerDocs
+export default PartnerDocs
