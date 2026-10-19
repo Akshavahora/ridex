@@ -18,6 +18,16 @@ function page() {
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState("")
 
+
+    const sanitizedIfsc = ifsc.trim().toUpperCase();
+    const isNamedValid=accountHolder.trim().length>=3
+    const isAccountNumberValid=accountNumber.trim().length>=9
+    const isIfscValid=IFSC_REGEX.test(sanitizedIfsc)
+    const isMobileValid=mobileNumber.trim().length===10 
+
+    const canSubmit=isNamedValid && isAccountNumberValid && isIfscValid && isMobileValid
+
+
     const handleBank=async()=>{
         setLoading(true)
         setError("")
@@ -25,7 +35,7 @@ function page() {
             const {data}=await axios.post("/api/partner/onboarding/bank",{
                 accountHolder,
                 accountNumber,
-                ifsc,   
+                ifsc:sanitizedIfsc,   
                 upi,
                 mobileNumber
             })
@@ -37,6 +47,9 @@ function page() {
             setLoading(false)
         }
     }
+
+
+  
 
 
 
@@ -70,10 +83,19 @@ function page() {
                 <label htmlFor='ahn' className='text-xs font-semibold text-gray-500'>Account Holder Name</label>
                 <div className='flex items-center mt-2'>
                     <div className='text-gray-400'><BadgeCheck/></div>
-                     <input type='text'id='ahn' placeholder='As per bank records' className='flex-1 border-b pb-2 text-sm focus:outline-none 
-                     border-gray-300 focus:border-black' value={accountHolder} onChange={(e) => setAccountHolder(e.target.value)} />
+                     <input type="text"
+                     id='ahn'
+                      placeholder='As per bank records'
+                    className ={`flex-1 border-b pb-2 text-sm focus:outline-none 
+                    ${!isNamedValid && accountHolder.length>0? "border-red 400 focus:border-red-500":"border-gray-300 focus:border-black"}`}
+                    
+                     value={accountHolder}
+                     onChange={(e) => setAccountHolder(e.target.value)} />
 
                 </div>
+                {!isNamedValid && accountHolder.length > 0 && (
+                    <p className='text-red-500 text-xs mt-1'>Account holder name must be at least 3 characters long</p>
+                )}
             </div>
 
 
@@ -81,30 +103,45 @@ function page() {
                 <label htmlFor='ahn' className='text-xs font-semibold text-gray-500'>Bank account number</label>
                 <div className='flex items-center mt-2'>
                     <div className='text-gray-400'><CreditCard/></div>
-                     <input type='text'id='ahn' placeholder='Enter account number' className='flex-1 border-b pb-2 text-sm focus:outline-none 
-                     border-gray-300 focus:border-black' value={accountNumber} onChange={(e) => setAccountNumber(e.target.value)} />
+                     <input type='text'id='ahn' placeholder='Enter account number' 
+                   className ={`flex-1 border-b pb-2 text-sm focus:outline-none 
+                    ${!isAccountNumberValid && accountNumber.length>0? "border-red 400 focus:border-red-500":"border-gray-300 focus:border-black"}`}
+                     value={accountNumber} onChange={(e) => setAccountNumber(e.target.value)} />
 
                 </div>
+                 {!isAccountNumberValid && accountNumber.length > 0 && (
+                    <p className='text-red-500 text-xs mt-1'>Account number must be at least 9 digits long</p>
+                )}
             </div>
 
             <div>
                 <label htmlFor='ahn' className='text-xs font-semibold text-gray-500'>IFSC code</label>
                 <div className='flex items-center mt-2'>
                     <div className='text-gray-400'><Landmark/></div>
-                     <input type='text'id='ahn' placeholder='HDFC001234' className='flex-1 border-b pb-2 text-sm focus:outline-none 
-                     border-gray-300 focus:border-black' value={ifsc} onChange={(e) => setIfsc(e.target.value)} />
+                     <input type='text'id='ahn' placeholder='HDFC001234'
+                      className ={`flex-1 border-b pb-2 text-sm focus:outline-none 
+                    ${!isIfscValid && ifsc.length>0? "border-red 400 focus:border-red-500":"border-gray-300 focus:border-black"}`}
+                    value={ifsc.toUpperCase()} onChange={(e) => setIfsc(e.target.value)} />
 
                 </div>
+                  {!isIfscValid && ifsc.length > 0 && (
+                    <p className='text-red-500 text-xs mt-1'>IFSC code is invalid</p>
+                )}
             </div>
 
             <div>
                 <label htmlFor='ahn' className='text-xs font-semibold text-gray-500'>Mobile number</label>
                 <div className='flex items-center mt-2'>
                     <div className='text-gray-400'><Phone/></div>
-                     <input type='text'id='ahn' placeholder='10 digit mobil number' className='flex-1 border-b pb-2 text-sm focus:outline-none 
-                     border-gray-300 focus:border-black' value={mobileNumber} onChange={(e) => setMobileNumber(e.target.value)} />
+                     <input type='text'id='ahn' placeholder='10 digit mobil number'
+                      className ={`flex-1 border-b pb-2 text-sm focus:outline-none 
+                    ${!isMobileValid && mobileNumber.length>0? "border-red 400 focus:border-red-500":"border-gray-300 focus:border-black"}`}
+                     value={mobileNumber} onChange={(e) => setMobileNumber(e.target.value)} />
 
                 </div>
+                  {!isMobileValid && mobileNumber.length > 0 && (
+                    <p className='text-red-500 text-xs mt-1'>Enter 10 digit Mobile number</p>
+                )}
             </div>
 
             <div>
@@ -132,9 +169,9 @@ function page() {
             whileHover={{scale:1.02}}
             whileTap={{scale:0.97}}
             onClick={handleBank}
-            disabled={loading}
+            disabled={!canSubmit || loading}
             className='mt-8 w-full h-14 rounded-2xl bg-black text-white font-semibold flex
-            disabled:opacity-40 transion' >
+            disabled:opacity-40 transion flex items-center justify-center' >
 
           
 
