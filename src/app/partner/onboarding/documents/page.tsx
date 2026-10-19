@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { motion } from "motion/react";
-import { ArrowLeft, FileCheck, UploadCloud } from "lucide-react";
+import { ArrowLeft, CircleDashed, FileCheck, UploadCloud } from "lucide-react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 
@@ -15,21 +15,33 @@ function page() {
     rc: null
   });
 
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState("")
+
+
   const handleDocs = async () => {
+    setLoading(true)
+    setError("")
+
     try {
 
       const formData = new FormData();
       if(!docs.aadhar || !docs.license || !docs.rc) {
-        return null;
+        setError("Please upload all required documents")
+       setLoading(false)
+       return null
+      
       }
       formData.append("aadhar", docs.aadhar);
       formData.append("license", docs.license);
       formData.append("rc", docs.rc);
       
       const {data} = await axios.post("/api/partner/onboarding/documents", formData);
-      console.log(data);
-    } catch (error) {
+      setLoading(false)
+    } catch (error:any) {
+      setError(error?.response?.data?.message ?? "Something went wrong")
       console.error("Error uploading documents:", error);
+      setLoading(false)
     }
   }
 
@@ -139,15 +151,17 @@ function page() {
             <p>Documents are securely stored and manually verified by our team.</p>
 
         </div>
+         {error && <p className="text-red-500 text-sm mt-4"> * {error}</p>}
 
         <motion.button 
         whileHover={{scale:1.02}}
         whileTap={{scale:0.97}}
         onClick={handleDocs}
+        disabled={loading}
         className='mt-8 w-full h-14 rounded-2xl bg-black text-white font-semibold flex
         items-center justify-center gap-2 disabled:opacity-40 transition'>
         
-            Continue
+             {loading ? <CircleDashed className="text-white animate-spin" /> : "Continue"}
         </motion.button>
       </motion.div>
     </div>
