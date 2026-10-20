@@ -60,7 +60,8 @@ export async function POST(req: NextRequest) {
 
     await user.save();
 
-    return Response.json({ partnerBank }, { status: 201 });
+    return Response.json(
+      { partnerBank }, { status: 201 });
   } catch (error) {
     return Response.json(
       {
@@ -103,11 +104,11 @@ export async function GET(req: NextRequest) {
         {
           message: "Partner bank details not found",
         },
-        { status: 404 },
+        { status: 200 },
       );
     }
 
-    return Response.json({ partnerBank }, { status: 200 });
+    return Response.json({ mobileNumber:user.mobileNumber,partnerBank }, { status: 200 });
   } catch (error) {
     return Response.json(
       {

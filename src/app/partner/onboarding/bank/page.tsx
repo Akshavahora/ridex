@@ -1,6 +1,6 @@
 'use client'
 import axios from 'axios'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { motion } from 'motion/react'
 import { ArrowLeft, Badge, BadgeCheck, CheckCircle, CircleDashed, CreditCard, Landmark, Phone } from 'lucide-react'
 import { useRouter } from 'next/navigation'
@@ -23,7 +23,7 @@ function page() {
     const isNamedValid=accountHolder.trim().length>=3
     const isAccountNumberValid=accountNumber.trim().length>=9
     const isIfscValid=IFSC_REGEX.test(sanitizedIfsc)
-    const isMobileValid=mobileNumber.trim().length===10 
+    const isMobileValid=mobileNumber.trim().length==10 
 
     const canSubmit=isNamedValid && isAccountNumberValid && isIfscValid && isMobileValid
 
@@ -49,7 +49,23 @@ function page() {
     }
 
 
-  
+  useEffect(()=>{
+    const handleGetBank=async ()=>{
+        try{
+            const {data}=await axios.get("/api/partner/onboarding/bank")
+            console.log(data)
+            setAccountHolder(data.partnerBank.accountHolder)
+            setAccountNumber(data.partnerBank.accountNumber)
+            setIfsc(data.partnerBank.ifsc)
+            setMobileNumber(data.mobileNumber)
+            setupi(data.partnerBank.upi)
+        }catch (error:any){
+            console.log(error)
+
+        }
+    }
+    handleGetBank()
+  },[])
 
 
 

@@ -54,6 +54,9 @@ function page() {
       [doc]: file
     }))
   }
+
+//TO visible the contiune button after all the documents uploaded 
+  const isComplete = docs.aadhar && docs.license && docs.rc;
   return (
     <div className="min-h-screen bg-white flex items-center justify-center px-4 ">
       <motion.div
@@ -91,10 +94,15 @@ function page() {
                     <p className='text-xs text-gray-500'>Government issued</p>
                 </div>
 
-                <div>
-                    <span className='text-xs text-gray-500'>Upload</span>
-                    <div className='w-10 h-10 rounded-full bg-black text-white flex-white flex items-center justify-center'><UploadCloud size={18}/></div>
-                </div>
+               
+                    {docs.aadhar ? 
+                    <span className='text-xs text-green-600'>Uploaded</span>
+                     :
+                      <div>
+                     <span className='text-xs text-gray-400'>Upload</span>
+                     <div className='w-10 h-10 rounded-full bg-black text-white flex-white flex items-center justify-center'><UploadCloud size={18}/></div>
+                     </div>}
+                   
 
                 <input type='file' hidden accept='image/*, .pdf'  onChange={(e) => handleImage("aadhar", e.target?.files?.[0] || null)}/>
 
@@ -112,10 +120,13 @@ function page() {
                     <p className='text-xs text-gray-500'>Valid driving license</p>
                 </div>
 
-                <div>
-                    <span className='text-xs text-gray-500'>Upload</span>
-                    <div className='w-10 h-10 rounded-full bg-black text-white flex-white flex items-center justify-center'><UploadCloud size={18}/></div>
-                </div>
+                 {docs.license ? 
+                    <span className='text-xs text-green-600'>Uploaded</span>
+                     :
+                      <div>
+                     <span className='text-xs text-gray-400'>Upload</span>
+                     <div className='w-10 h-10 rounded-full bg-black text-white flex-white flex items-center justify-center'><UploadCloud size={18}/></div>
+                     </div>}
     
                 <input type='file' hidden accept='image/*, .pdf'  onChange={(e) => handleImage("license", e.target?.files?.[0] || null)}/>
 
@@ -133,10 +144,13 @@ function page() {
                     <p className='text-xs text-gray-500'> Registration Certificate</p>
                 </div>
 
-                <div>
-                    <span className='text-xs text-gray-500'>Upload</span>
-                    <div className='w-10 h-10 rounded-full bg-black text-white flex-white flex items-center justify-center'><UploadCloud size={18}/></div>
-                </div>
+                 {docs.rc ? 
+                    <span className='text-xs text-green-600'>Uploaded</span>
+                     :
+                      <div>
+                     <span className='text-xs text-gray-400'>Upload</span>
+                     <div className='w-10 h-10 rounded-full bg-black text-white flex-white flex items-center justify-center'><UploadCloud size={18}/></div>
+                     </div>}
 
                 <input type='file' hidden accept='image/*, .pdf'  onChange={(e) => handleImage("rc", e.target?.files?.[0] || null)}/>
 
@@ -157,7 +171,7 @@ function page() {
         whileHover={{scale:1.02}}
         whileTap={{scale:0.97}}
         onClick={handleDocs}
-        disabled={loading}
+        disabled={!isComplete  || loading}
         className='mt-8 w-full h-14 rounded-2xl bg-black text-white font-semibold flex
         items-center justify-center gap-2 disabled:opacity-40 transition'>
         
