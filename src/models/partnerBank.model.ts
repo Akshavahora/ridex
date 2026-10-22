@@ -16,7 +16,7 @@ interface IPartnerBank{
 const partnerBankSchema = new mongoose.Schema<IPartnerBank>(
     {
         owner: {
-            owner: mongoose.Schema.Types.ObjectId,
+            type: mongoose.Schema.Types.ObjectId,
             ref: "User",
             required: true,
         },
@@ -44,6 +44,6 @@ const partnerBankSchema = new mongoose.Schema<IPartnerBank>(
         },
     }, {timestamps:true})
 
-    const PartnerBank = mongoose.models.Vehicle  || mongoose.model("PartnerBank", partnerBankSchema)
+    const PartnerBank = mongoose.models.PartnerBank  || mongoose.model("PartnerBank", partnerBankSchema)
 
     export default PartnerBank              

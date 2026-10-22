@@ -1,12 +1,39 @@
+import { auth } from "@/auth";
 import Footer from "@/components/Footer";
 import Nav from "@/components/Nav";
 import PublicHome from "@/components/PublicHome";
+import PartnerDashboard from "@/components/PartnerDashboard";
+import AdminDashboard from "@/components/AdminDashboard";
+import connectDb from "@/lib/db";
+import User from "@/models/user.model";
 
-export default function Home() {
+export default async function Home() {
+  const session =await auth()
+  await connectDb()
+  const user=await User.findOne({email:session?.user?.email})
+
   return (
     <div className="w-full min-h-screen bg-white">
+     
+
+     {user?.role=="partner"
+     ?
+     <>
      <Nav/>
-     <PublicHome/>
+      <PartnerDashboard/></>
+    
+     :
+     (
+      user?.role=="admin"
+      ?
+      <AdminDashboard/>
+      :
+      <>
+      <Nav/>
+      <PublicHome/>
+      </>
+     )}
+    
      <Footer/>
 
     </div>
