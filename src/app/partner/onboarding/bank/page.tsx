@@ -100,6 +100,7 @@ function page() {
                 <div className='flex items-center mt-2'>
                     <div className='text-gray-400'><BadgeCheck/></div>
                      <input type="text"
+
                      id='ahn'
                       placeholder='As per bank records'
                     className ={`flex-1 border-b pb-2 text-sm focus:outline-none 
@@ -109,6 +110,7 @@ function page() {
                      onChange={(e) => setAccountHolder(e.target.value)} />
 
                 </div>
+                
                 {!isNamedValid && accountHolder.length > 0 && (
                     <p className='text-red-500 text-xs mt-1'>Account holder name must be at least 3 characters long</p>
                 )}
