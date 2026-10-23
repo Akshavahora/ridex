@@ -8,7 +8,7 @@ export async function GET() {
         await connectDb();
 
         const session = await auth()
-        if (!session || !session.user) {
+        if (!session || !session.user?.email || session.user.role !=="admin") {
             return Response.json({ message: "user is not authenticated" },
                 { status: 400 }
             )
@@ -17,7 +17,8 @@ export async function GET() {
 
         const partner = await User.find({
             role: "partner",
-            VideoKycStatus: {$in:["pending",""]}
+            partnerOnBoardingSteps:4,
+            videoKycStatus: {$in:["pending","in_progress"]}
         })
         return Response.json(
             partner, 
