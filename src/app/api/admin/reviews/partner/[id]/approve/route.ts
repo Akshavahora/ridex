@@ -41,6 +41,7 @@ export async function GET(
     }
 
     partner.partnerStatus="approved"
+    partner.videoKYCStatus="pending"
     partner.partnerOnBoardingSteps=4
     await partner.save()
     partnerDocs.status="approved"

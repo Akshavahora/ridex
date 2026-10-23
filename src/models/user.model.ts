@@ -1,4 +1,11 @@
-import mongoose, {Document, Mongoose } from 'mongoose';
+import mongoose, { Document, Mongoose } from 'mongoose';
+
+type VideoKycStatus =
+    "not_required"
+    | "pending"
+    | "in_progress"
+    | "approved"
+    | "rejected";
 
 export interface IUser extends Document {
     name: string;
@@ -10,8 +17,12 @@ export interface IUser extends Document {
     otpExpiresAt?: Date;
     partnerOnBoardingSteps: number;
     mobileNumber?: string;
-    partnerStatus:"pending" | "approved" |"rejected"
-    rejectionReason?:string
+    partnerStatus: "pending" | "approved" | "rejected"
+    rejectionReason?: string
+    videoKycStatus: VideoKycStatus
+    videoKycRoomId: string
+    videoKycRejectionReason: string
+
     createdAt: Date;
     updatedAt: Date;
 }
@@ -20,7 +31,7 @@ const userSchema = new mongoose.Schema<IUser>({
     name: {
         type: String,
         required: true,
-    }, 
+    },
     email: {
         type: String,
         required: true,
@@ -29,11 +40,11 @@ const userSchema = new mongoose.Schema<IUser>({
     password: {
         type: String,
     },
-    role:{
+    role: {
         type: String,
         default: "user",
         enum: ["user", "partner", "admin"]
-    }, 
+    },
     isEmailVerified: {
         type: Boolean,
         default: false,
@@ -48,26 +59,33 @@ const userSchema = new mongoose.Schema<IUser>({
         type: String,
 
     },
-
-    partnerStatus:{
-        type:String,
-        enum:["pending","approved","rejected"],
-        default:"pending"
+    partnerStatus: {
+        type: String,
+        enum: ["pending", "approved", "rejected"],
+        default: "pending"
     },
-    rejectionReason:{
-        type:String
+    rejectionReason: {
+        type: String
     },
-
-
+    videoKycStatus: {
+        type: String,
+        enum: ["not_required", "pending", "in_progress", "approved", "rejected"],
+        default: "not_required"
+    },
+    videoKycRoomId: {
+        type: String
+    },
+    videoKycRejectionReason: {
+        type: String
+    },
     otp: {
         type: String
     },
     otpExpiresAt: {
         type: Date
     }
-    
-},{timestamps: true});
+}, { timestamps: true });
 
 const User = mongoose.models.User || mongoose.model("User", userSchema);
 
-export default  User;
+export default User;
