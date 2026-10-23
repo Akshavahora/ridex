@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 // Create Partner Document interface 
-interface IPartnerDocs {
+export interface IPartnerDocs {
     owner: mongoose.Types.ObjectId,
     adharUrl: string,
     rcUrl: string,

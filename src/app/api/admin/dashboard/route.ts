@@ -27,7 +27,7 @@ export async function GET(req:NextRequest){
      const pendingPartnerUsers=await User.find({
         role:"partner",
         partnerStatus:"pending",
-        partnerOnBoardingSteps:3
+        partnerOnBoardingSteps:{$gte:3}
      })  
 
 //$in Oparater will go inside the array and check the partners ids and findout the owers vehicle id
