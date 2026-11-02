@@ -189,7 +189,7 @@ function page() {
             onClick={handleBank}
             disabled={!canSubmit || loading}
             className='mt-8 w-full h-14 rounded-2xl bg-black text-white font-semibold flex
-            disabled:opacity-40 transion flex items-center justify-center' >
+            disabled:opacity-40 transition items-center justify-center' >
 
           
 

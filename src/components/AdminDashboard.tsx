@@ -39,6 +39,7 @@ function AdminDashboard() {
     }
   };
 
+  // Fetch pending KYC requests
   const handleGetPendingKYC = async () => {
     try {
       const { data } = await axios.get("/api/admin/video-kyc/pending")

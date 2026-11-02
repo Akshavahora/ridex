@@ -7,54 +7,52 @@ import Vehicle from "@/models/vehicle.model";
 import { NextRequest } from "next/server";
 
 export async function GET(
-    req:NextRequest,
-    context:{params:Promise<{id:string}>})
-    
-    {
-        try{
-             const session = await auth()
-                    if(!session || !session.user?.email || session.user.role !=="admin"){
-                        return Response.json({message:"unauthorized"}
-                            ,{status:400}
-                        )
-                    }
+    req: NextRequest,
+    context: { params: Promise<{ id: string }> }
+) {
+    try {
+        const session = await auth()
+        if (!session || !session.user?.email || session.user.role !== "admin") {
+            return Response.json({ message: "unauthorized" }
+                , { status: 400 }
+            )
+        }
 
+        // Connect Database
+        await connectDb()
 
-                    await connectDb()
-                    const partnerId=(await context.params).id
-                    const partner=await User.findById(partnerId)
+        const partnerId = (await context.params).id
+        const partner = await User.findById(partnerId)
 
-                    if(!partner || partner.role!=="partner"){
-                        return Response.json(
-                            {message:"partner not found"},
-                            {status:400}
-                        )
-                    }
+        if (!partner || partner.role !== "partner") {
+            return Response.json(
+                { message: "partner not found" },
+                { status: 400 }
+            )
+        }
 
-      //Bringing details from partner bank and documents
-      
-             const vehicle=await Vehicle.findOne({owner:partnerId})    
-             const documents=await PartnerDocs.findOne({owner:partnerId})    
-             const bank=await PartnerBank.findOne({owner:partnerId})    
+        //Bringing details from partner bank and documents
 
-             return Response.json(
-                {
-                    partner,
-                    vehicle:vehicle || null,
-                    documents:documents || null,
-                    bank:bank || null
-                },
-                {status:200}
+        const vehicle = await Vehicle.findOne({ owner: partnerId })
+        const documents = await PartnerDocs.findOne({ owner: partnerId })
+        const bank = await PartnerBank.findOne({ owner: partnerId })
 
-             )
-
-    }catch(error){
         return Response.json(
-            {message:`partner get error ${error}`},
-            {status:500}
+            {
+                partner,
+                vehicle: vehicle || null,
+                documents: documents || null,
+                bank: bank || null
+            },
+            { status: 200 }
+
         )
 
-    }}
+    } catch (error) {
+        return Response.json(
+            { message: `partner get error ${error}` },
+            { status: 500 }
+        )
 
-  
-    
+    }
+}

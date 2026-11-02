@@ -18,7 +18,7 @@ export async function GET() {
         const partner = await User.find({
             role: "partner",
             partnerOnBoardingSteps:4,
-            videoKycStatus: {$in:["pending","in_progress"]}
+            videoKycStatus: {$in:["pending","in_progress"]} //in operator is used to match any of the values specified in the array. In this case, it will match documents where the videoKycStatus field is either "pending" or "in_progress".
         })
         return Response.json(
             partner, 

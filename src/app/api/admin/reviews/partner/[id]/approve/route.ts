@@ -53,8 +53,6 @@ export async function GET(
         {message:"partner approved successfully"},{status:200}
     )
 
-
-
   } catch (error) {
          return Response.json(
         {message:`partner approved error ${error}`},{status:500}

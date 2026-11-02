@@ -9,7 +9,9 @@ function DocPreview({label,url}:any) {
             {label}
         </div>
         <div className='h-52 flex items-center justify-center bg-white'>
+
             {!url && <span className='text-xs text-gray-400'>Image Not Uploaded</span>}
+            
             {isImage && <img src={url} className='w-full h-full object-cover'/>}
 
             {isPdf && <iframe src={url} className='w-full h-full'/>}

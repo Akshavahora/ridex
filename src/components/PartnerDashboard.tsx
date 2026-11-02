@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import RejectionCard from "./RejectionCard";
 import StatusCard from "./StatusCard";
 import ActionCard from "./ActionCard";
+import axios from "axios";
 
 type Step = {
   id: number;
@@ -17,7 +18,7 @@ type Step = {
 };
 
 // ============ STEPS =============
-const STPES: Step[] = [
+const STEPS: Step[] = [
   { id: 1, title: "Vehicle", route: "/partner/onboarding/vehicle" },
   { id: 2, title: "Documents", route: "/partner/onboarding/documents" },
   { id: 3, title: "Bank", route: "/partner/onboarding/bank" },
@@ -28,12 +29,13 @@ const STPES: Step[] = [
   { id: 8, title: "Live" },
 ];
 
-const TOTAL_STEPS = STPES.length;
+const TOTAL_STEPS = STEPS.length;
 
 function PartnerDashboard() {
   const [activeStep, setActiveStep] = useState(0);
   const { userData } = useSelector((state: RootState) => state.user);
   const router = useRouter();
+  const [ requestLoading, setRequestLoading ] = useState(false)
   useEffect(() => {
     if (userData) {
       setActiveStep(userData.partnerOnBoardingSteps + 1);
@@ -58,6 +60,7 @@ function PartnerDashboard() {
           </p>
         </div>
 
+        {/* Progress Bar */}
         <div className="bg-white rounded-3xl shadow-xl border overflow-x-auto ">
           <div className="relative min-w-[800px]  ">
             <div className="absolute top-7 left-0 w-full h-[3px] bg-gray-200 rounded-full" />
@@ -68,7 +71,7 @@ function PartnerDashboard() {
             />
 
             <div className="relative flex justify-between">
-              {STPES.map((s, index) => {
+              {STEPS.map((s, index) => {
                 const completed = s.id < activeStep;
                 const active = s.id === activeStep;
                 const locked = s.id > activeStep;
@@ -129,44 +132,41 @@ function PartnerDashboard() {
           />
         )}
 
-
-        {
-          activeStep==5 &&(
-            userData?.videoKycStatus==="approved" ? (
+        {activeStep == 5 &&
+          (userData?.videoKycStatus === "approved" ? (
             <StatusCard
-              icon={<Check size={18}/>}
+              icon={<Check size={18} />}
               title={"Video Kyc approved"}
               desc={"You can now proceed to pricing."}
-
             />
-
-            
-
-          ):  userData?.videoKycStatus==="rejected" ?(
-            <RejectionCard 
-                title="Video KYC Rejected"
-                reason={userData?.videoKycRejectionReason}
-                actionLabel="Request Again"
-                />
-
-          ):   userData?.videoKycStatus==="in_progress" && userData?.videoKycRoomId ?(
-            <ActionCard 
-              icon={<Video size={18}/>}
+          ) : userData?.videoKycStatus === "rejected" ? (
+            <RejectionCard
+              title="Video KYC Rejected"
+              reason={userData?.videoKycRejectionReason}
+              actionLabel={requestLoading?"requesting...":"Request Again"}
+              onAction={async () => {
+                setRequestLoading(true)
+                await axios.get("/api/partner/video-kyc/request")
+                setRequestLoading(false)
+              }}
+            />
+          ) : userData?.videoKycStatus === "in_progress" &&
+            userData?.videoKycRoomId ? (
+            <ActionCard
+              icon={<Video size={18} />}
               title={"Admin Started Video KYC"}
               button={"Join Call"}
-              onclick={
-                ()=>router.push(`/video-kyc/${userData.videoKycRoomId}`)
+              onclick={() =>
+                router.push(`/video-kyc/${userData.videoKycRoomId}`)
               }
             />
-          ): (
-            <StatusCard 
-              icon={ <Clock size={18}/>}
+          ) : (
+            <StatusCard
+              icon={<Clock size={18} />}
               title="Waiting for Admin"
               desc="Admin will initiate Video KYC shortly."
             />
-          )
-        )
-        }
+          ))}
       </div>
     </div>
   );

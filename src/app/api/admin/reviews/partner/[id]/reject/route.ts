@@ -24,8 +24,6 @@ export async function POST(
       return Response.json({ message: "partner not found" }, { status: 400 });
     }
 
-   
-  
     partner.partnerStatus="rejected"
     partner.rejectionReason=rejectionReason
     await partner.save()
@@ -34,8 +32,6 @@ export async function POST(
     return Response.json(
         {message:"partner Rejected successfully"},{status:200}
     )
-
-
 
   } catch (error) {
          return Response.json(

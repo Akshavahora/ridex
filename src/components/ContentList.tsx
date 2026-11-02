@@ -74,7 +74,7 @@ function ContentList({ data, type }: any) {
             <div className="flex items-center gap-3 min-w-0">
               <div
                 className="w-10 h-10 rounded-xl flex items-center justify-center
-                                text-sm font-bold shrik-0 bg-purple-100 text-purple-800"
+                                text-sm font-bold shrink-0 bg-purple-100 text-purple-800"
               >
                 {name.charAt(0).toUpperCase() ?? <User size={14} />}
               </div>
@@ -94,7 +94,7 @@ function ContentList({ data, type }: any) {
                                 hover:bg-neutral-800 text-white text-sm font-semibold transition-colors"
                                 onClick={()=>handleStartVideoKyc(item._id)}
                 >
-                  StartVideo KYC <ArrowRight size={15} />
+                  Start Video KYC <ArrowRight size={15} />
                 </motion.button>
               ) : item.videoKycStatus === "in_progress" ? (
                 <motion.button
@@ -113,7 +113,7 @@ function ContentList({ data, type }: any) {
                   onClick={() => {
                     type == "partner"
                       ? router.push(`/admin/reviews/partner/${item._id}`)
-                      : router.push(`/admin/reviews/partner/${item._id}`);
+                      : router.push(`/admin/reviews/vehicle/${item._id}`);
                   }}
                 >
                   Review <ArrowRight size={15} />

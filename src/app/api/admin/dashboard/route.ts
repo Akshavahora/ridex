@@ -30,13 +30,13 @@ export async function GET(req:NextRequest){
         partnerOnBoardingSteps:{$gte:3}
      })  
 
-//$in Oparater will go inside the array and check the partners ids and findout the owers vehicle id
+//$in Operator will go inside the array and check the partners ids and findout the owers vehicle id
      const partnerIds=pendingPartnerUsers.map((p)=>p._id)
      const partnerVehicles=await Vehicle.find({
         owner:{$in:partnerIds}
      })
 
-//here we will get the id of owner and we can add the type of vehical
+//here we will get the id of owner and we can add the type of vehicle
      const vehicleTypeMap=new Map(
         partnerVehicles.map((v)=>[String(v.owner),v.type])
         

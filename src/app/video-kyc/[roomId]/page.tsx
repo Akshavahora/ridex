@@ -16,8 +16,8 @@ import {
   X,
   XCircle,
 } from "lucide-react";
-import { useParams } from "next/navigation";
-import { useRouter } from "next/router";
+import { useParams, useRouter } from "next/navigation";
+// import {  } from "next/router";
 
 function page() {
   const { userData } = useSelector((state: RootState) => state.user);
@@ -35,7 +35,7 @@ function page() {
   const [rLoading, setRLoading] = useState(false);
   const [showApprovalModal, setShowApprovalModal] = useState(false);
   const [showRejectionModal, setShowRejectionModal] = useState(false);
-  const router = useRouter();
+  // const router = useRouter();
 
   useEffect(() => {
     if (joined) return;
@@ -231,8 +231,10 @@ function page() {
                       {isMicOn ? <Mic /> : <MicOff />}
                     </button>
                   </div>
-                  onClick(startCall)
+                  
+                  {/* onClick(startCall) */}
                   <button
+                    onClick={startCall}
                     className="w-full bg-white text-black py-4 rounded-xl font-semibold"
                     disabled={loading}
                   >
