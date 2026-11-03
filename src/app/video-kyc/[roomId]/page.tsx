@@ -35,8 +35,9 @@ function page() {
   const [rLoading, setRLoading] = useState(false);
   const [showApprovalModal, setShowApprovalModal] = useState(false);
   const [showRejectionModal, setShowRejectionModal] = useState(false);
-  // const router = useRouter();
+  const router = useRouter();
 
+  // Handle video stream & How to access Camera
   useEffect(() => {
     if (joined) return;
     let localstream: MediaStream;
@@ -151,6 +152,7 @@ function page() {
       items-starts sm:items-center gap-4"
       >
         <div>
+          {/* Header */}
           <Image src={"/logo.png"} alt="logo" width={44} height={44} priority />
           <p className="text-xs text-gray-400">
             {userData?.role == "admin"
@@ -191,7 +193,9 @@ function page() {
           </div>
         )}
 
+        {/* Main body Part */}
         <div className="flex-1 relative">
+
           <div
             ref={containerRef}
             className={`absolute inset-0 ${joined ? "block" : "hidden"}`}
@@ -204,7 +208,7 @@ function page() {
                     ref={previewRef}
                     autoPlay
                     playsInline
-                    className="w-full h-[300px] sm:h[400px] object-cover"
+                    className="w-full h-[300px] sm:h-[400px] object-cover"
                   />
 
                   {!isCameraOn && (
@@ -232,7 +236,6 @@ function page() {
                     </button>
                   </div>
                   
-                  {/* onClick(startCall) */}
                   <button
                     onClick={startCall}
                     className="w-full bg-white text-black py-4 rounded-xl font-semibold"
