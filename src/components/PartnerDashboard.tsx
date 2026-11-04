@@ -10,6 +10,8 @@ import RejectionCard from "./RejectionCard";
 import StatusCard from "./StatusCard";
 import ActionCard from "./ActionCard";
 import axios from "axios";
+import { IVehicle } from "@/models/vehicle.model";
+import PricingModal from "./PricingModal";
 
 type Step = {
   id: number;
@@ -35,7 +37,9 @@ function PartnerDashboard() {
   const [activeStep, setActiveStep] = useState(0);
   const { userData } = useSelector((state: RootState) => state.user);
   const router = useRouter();
-  const [ requestLoading, setRequestLoading ] = useState(false)
+  const [requestLoading, setRequestLoading] = useState(false);
+  const [showPricing, setShowPricing] = useState(false);
+  const [vehicleData, setVehicleData] = useState<IVehicle | null>();
   useEffect(() => {
     if (userData) {
       setActiveStep(userData.partnerOnBoardingSteps + 1);
@@ -44,6 +48,14 @@ function PartnerDashboard() {
 
   //routing
   const goToStep = (step: Step) => {
+    if (
+      step.id == 6 &&
+      userData?.partnerStatus === "approved" &&
+      userData.videoKycStatus === "approved"
+    ) {
+      setShowPricing(true);
+      return;
+    }
     if (step.route && step.id <= activeStep) {
       router.push(step.route);
     }
@@ -143,11 +155,11 @@ function PartnerDashboard() {
             <RejectionCard
               title="Video KYC Rejected"
               reason={userData?.videoKycRejectionReason}
-              actionLabel={requestLoading?"requesting...":"Request Again"}
+              actionLabel={requestLoading ? "requesting..." : "Request Again"}
               onAction={async () => {
-                setRequestLoading(true)
-                await axios.get("/api/partner/video-kyc/request")
-                setRequestLoading(false)
+                setRequestLoading(true);
+                await axios.get("/api/partner/video-kyc/request");
+                setRequestLoading(false);
               }}
             />
           ) : userData?.videoKycStatus === "in_progress" &&
@@ -168,6 +180,12 @@ function PartnerDashboard() {
             />
           ))}
       </div>
+
+      <PricingModal 
+        open={showPricing}
+        onClose={() => setShowPricing(false)}
+        data={vehicleData || null}
+      />
     </div>
   );
 }

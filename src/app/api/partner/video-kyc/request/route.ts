@@ -7,6 +7,7 @@ export async function GET() {
     try {
 
         await connectDb()
+        
         const session = await auth()
         if (!session || !session.user?.email) {
             return Response.json({ message: "unauthorized" }, { status: 400 })

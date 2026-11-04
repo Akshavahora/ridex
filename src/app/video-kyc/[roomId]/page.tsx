@@ -17,7 +17,6 @@ import {
   XCircle,
 } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
-// import {  } from "next/router";
 
 function page() {
   const { userData } = useSelector((state: RootState) => state.user);
@@ -250,6 +249,7 @@ function page() {
         </div>
       </div>
 
+      {/* Approval Modal */}
       <AnimatePresence>
         {showApprovalModal && (
           <motion.div
@@ -293,6 +293,7 @@ function page() {
         )}
       </AnimatePresence>
 
+      {/* Rejection Modal */}
       <AnimatePresence>
         {showRejectionModal && (
           <motion.div
