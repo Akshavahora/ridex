@@ -38,6 +38,9 @@ function PartnerDashboard() {
   const { userData } = useSelector((state: RootState) => state.user);
   const router = useRouter();
   const [requestLoading, setRequestLoading] = useState(false);
+
+
+  
   const [showPricing, setShowPricing] = useState(false);
   const [vehicleData, setVehicleData] = useState<IVehicle | null>();
   useEffect(() => {
@@ -45,6 +48,20 @@ function PartnerDashboard() {
       setActiveStep(userData.partnerOnBoardingSteps + 1);
     }
   }, [userData]);
+
+  const handleGetPricing = async () => {
+  try {
+    const { data } = await axios.get("/api/partner/onboarding/pricing");
+    console.log(data);
+    setVehicleData(data);
+  } catch (error) {
+    console.error("Error fetching pricing:", error);
+  }
+};
+
+useEffect(() => {
+  handleGetPricing();
+}, []);
 
   //routing
   const goToStep = (step: Step) => {
@@ -181,7 +198,7 @@ function PartnerDashboard() {
           ))}
       </div>
 
-      <PricingModal 
+      <PricingModal
         open={showPricing}
         onClose={() => setShowPricing(false)}
         data={vehicleData || null}

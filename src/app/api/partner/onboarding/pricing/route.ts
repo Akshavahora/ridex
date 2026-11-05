@@ -103,3 +103,55 @@ export async function POST(req: NextRequest) {
         )
     }
 } 
+
+export async function GET(req: NextRequest) {
+   try {
+        await connectDb();
+
+        const session = await auth();
+        if (!session || !session.user?.email) {
+            return Response.json(
+                {
+                    message: "unauthorized",
+                },
+                { status: 400 },
+            );
+        }
+
+        const partner = await User.findOne({ email: session.user.email });
+        if (!partner) {
+            return Response.json(
+                {
+                    message: "Partner not found",
+                },
+                { status: 400 },
+            );
+        }
+
+        // First find Partner Vehicle
+        const vehicle = await Vehicle.findOne({owner:partner._id})
+
+        if (!vehicle) {
+            return Response.json(
+                {
+                    message: "vehicle not found",
+                },
+                { status: 400 },
+            );
+        }
+
+        return Response.json(
+            {
+                vehicle,
+            },
+            { status: 200 },
+        )
+   } catch (error) {
+        return Response.json(
+            {
+                message: `Pricing and Vehicle Image Fetch Error: ${error}`,
+            },
+            { status: 500 },
+        )
+   }
+}
