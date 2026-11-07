@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { ImagePlus, IndianRupee } from "lucide-react";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 
 type PropsType = {
   open: boolean;
@@ -14,17 +15,16 @@ type PropsType = {
 
 function PricingModal({ open, onClose, data }: PropsType) {
   const [image, setImage] = useState<File | null>();
-  const [preview, setPreview] = useState<string | null>(data?.imageUrl || null);
-  const [baseFare, setBaseFare] = useState(data?.baseFare?.toString() || "");
-  const [pricePerKM, setPricePerKM] = useState(
-    data?.pricePerKM?.toString() || "",
-  );
-  const [waitingCharge, setWaitingCharge] = useState(
-    data?.waitingCharge?.toString() || "",
-  );
+  const [preview, setPreview] = useState<string | null>(null);
+  const [baseFare, setBaseFare] = useState("");
+  const [pricePerKM, setPricePerKM] = useState("",);
+  const [waitingCharge, setWaitingCharge] = useState("");
   const [loading, setLoading] = useState(false);
-
+  const router = useRouter();
   useEffect(() => {
+    if(data) {
+      
+    }
     setPreview(data?.imageUrl || null);
     setBaseFare(data?.baseFare?.toString() || "");
     setPricePerKM(data?.pricePerKM?.toString() || "");
@@ -32,6 +32,7 @@ function PricingModal({ open, onClose, data }: PropsType) {
   }, [data]);
 
   const handleSubmit = async () => {
+    setLoading(true);
     try {
       const formData = new FormData();
       formData.append("baseFare", baseFare);
@@ -47,8 +48,11 @@ function PricingModal({ open, onClose, data }: PropsType) {
         formData,
       );
       console.log(data);
+      setLoading(false);
+      onClose();
     } catch (error: any) {
       console.log(error.response.data.message | error);
+      setLoading(false);
     }
   };
   return (

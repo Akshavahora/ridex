@@ -39,8 +39,6 @@ function PartnerDashboard() {
   const router = useRouter();
   const [requestLoading, setRequestLoading] = useState(false);
 
-
-  
   const [showPricing, setShowPricing] = useState(false);
   const [vehicleData, setVehicleData] = useState<IVehicle | null>();
   useEffect(() => {
@@ -50,18 +48,18 @@ function PartnerDashboard() {
   }, [userData]);
 
   const handleGetPricing = async () => {
-  try {
-    const { data } = await axios.get("/api/partner/onboarding/pricing");
-    console.log(data);
-    setVehicleData(data);
-  } catch (error) {
-    console.error("Error fetching pricing:", error);
-  }
-};
+    try {
+      const { data } = await axios.get("/api/partner/onboarding/pricing");
+      console.log(data);
+      setVehicleData(data.vehicle);
+    } catch (error) {
+      console.error("Error fetching pricing:", error);
+    }
+  };
 
-useEffect(() => {
-  handleGetPricing();
-}, []);
+  useEffect(() => {
+    handleGetPricing();
+  }, []);
 
   //routing
   const goToStep = (step: Step) => {
@@ -79,6 +77,7 @@ useEffect(() => {
   };
 
   const progressPercentage = ((activeStep - 1) / (TOTAL_STEPS - 1)) * 100;
+
   return (
     <div className="min-h-screen bg-liner-to-br from-gray-100 to-gray-200 px-4 pt-28 pb-20">
       <div className="max-w-7xl mx-auto space-y-16">
@@ -196,6 +195,14 @@ useEffect(() => {
               desc="Admin will initiate Video KYC shortly."
             />
           ))}
+
+        {activeStep === 7 && vehicleData?.status === "pending" && (
+          <StatusCard
+            icon={<Clock size={20} />}
+            title="Pricing Under Review"
+            desc="Admin is reviewing your pricing."
+          />
+        )}
       </div>
 
       <PricingModal
